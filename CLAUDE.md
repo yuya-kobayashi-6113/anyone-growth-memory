@@ -6,6 +6,44 @@
 
 ---
 
+## 最新の状態【2026-08-22 実測】
+
+**この節が、以下の古い記述より優先する。**
+
+**オープンPRは両リポジトリともゼロ**(2026-08-22 実測)。下の「次にやること」にある ⑯⑲⑳㉑㉒ の「PR提出済み・レビュー待ち」は**すべてマージ済み**。
+本数は書かない。数え直しは GitHub で行う。
+
+### 2026-08-22 に進んだこと(このセッションの外で実施。詳細は各リポジトリのコミットを見る)
+
+- **anyone-growth**: 帳票テンプレート・生成物の削除でファイル実体を残す / 期限切れを掃除する常駐処理 / **ADRを新設し帳票出力の詳細設計書を追加**
+- **anyone-user-platform**: **設計正本・ADR・運用手順をリポジトリへ集約**し、索引と印刷CSSを整備
+
+### 両リポジトリの現在の形
+
+- ルートに **`CLAUDE.md` と `AGENTS.md`** がある
+- **`docs/{adr,design,rules}`** гがある(ID基盤はさらに `integration` / `operations`)。`docs/rules/` にはコーディング規約が5本
+- **設計文書のリポジトリ集約が進んでいる。** Cowork の `design-docs/` との役割分担は**未整理**。どちらが正かを決める必要がある
+
+### 開発環境の移行【2026-08-22 決定・進行中】
+
+- **記憶の正本はこのリポジトリ。** Cowork の `project-memory/` は移設時点の写しで、更新しない
+- **実装・テスト・push を Mac へ移す方針で決定。** 計画の正本は Cowork の `session-docs/local-migration-plan-20260822.md`
+- **ガードレール(`.claude/`)を両リポジトリへ提出済み・レビュー待ち。** ブランチは `chore/claude-code-guardrails`
+
+### ガードレールが入ったあとの作法
+
+- **push と PR作成の前に `bash .claude/hooks/verify.sh` を実行する。** テストが緑のときだけ証跡が残り、**証跡が無い/古いと push と `gh pr create` が止まる**
+- **`--no-verify`、`git commit -n`、lease なしの force push は止まる**
+- 検証コマンドは `.claude/verify-command`(Growth は `pnpm run ci`、ID基盤は CI と同じ6コマンドの並び)
+- **python3 が要る。**無いとフックは素通しせず停止する
+
+### 確認したい点(2026-08-22 に気づいたもの)
+
+- **ID基盤のCIに、データベースのサービスコンテナと接続情報の環境変数が無い。**テストのステップ名は「単体+アーキテクチャ+PostgreSQL結合」。**結合テストが黙って読み飛ばされているなら「CI緑」が結合テストの成功を意味しない。**Growth側は `postgres:17-alpine` と `GROWTH_TEST_DATABASE` を明示的に持っている
+- **anyone-growth のルートに `_to_delete/` がコミットされている**(デスクトップ経由の受け渡しの残骸)。掃除が要る
+
+---
+
 > **進め方の共通ルールは allsmile-ops スキルが正**(dev-workflow / memory-ops / proposal-format / no-sycophancy / deliverable-style / env-pitfalls / docs-backup / ops-maintenance / project-bootstrap / subagent-instructions)。
 > ここに置くのは**案件固有の情報だけ**。共通ルールをこちらに書き写さない(2026-08-07 移行)。
 > **PR番号・テスト件数・オープンPRの有無は書かない。**数え方は [github-repos](memory/repos.md) の表を見て数え直す(2026-08-09)。
