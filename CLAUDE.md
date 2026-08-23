@@ -19,7 +19,7 @@
 ### 両リポジトリの現在の形
 
 - ルートに **`CLAUDE.md` と `AGENTS.md`** がある
-- **`docs/{adr,design,rules}`**がある(ID基盤はさらに `integration` / `operations`)。`docs/rules/` にはコーディング規約が5本
+- **`docs/{adr,design,rules}`** がある(ID基盤はさらに `integration` / `operations`)。`docs/rules/` にはコーディング規約が5本
 - **設計文書のリポジトリ集約が進んでいる。** Cowork の `design-docs/` との役割分担は**未整理**。どちらが正かを決める必要がある
 
 ### 開発環境の移行【2026-08-23 時点・進行中】
