@@ -114,7 +114,7 @@ Please check the 'Billing & plans' section in your settings
 
 ## クラウドで .NET 10 SDK を入れる最短経路【2026-08-20 追加】
 **Ubuntu 24.04 の標準リポジトリに `dotnet-sdk-10.0` がある。**`apt-get update && apt-get install -y dotnet-sdk-10.0` で入る(実測 10.0.111)。
-Microsoft の配布ホスト(`dot.net` / `builds.dotnet.microsoft.com` / `packages.microsoft.com` / `aka.ms`)は**すべて遮断**되されたままなので、
+Microsoft の配布ホスト(`dot.net` / `builds.dotnet.microsoft.com` / `packages.microsoft.com` / `aka.ms`)は**すべて遮断**されたままなので、
 [クラウド検証環境](memory/verification-env.md) に書いてある「Docker Hub の bitnami/dotnet-sdk から取り出す」回避は**もう要らない**。
 
 ## 進め方【2026-08-18 決定】
