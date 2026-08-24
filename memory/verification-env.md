@@ -75,3 +75,14 @@ compose を上げ、**Keycloakの判定は `.well-known` が200を返すこと�
 - **PRを出す前にビルドとテストを通す**(2026-08-18 に運用として決定)
 - **画面の通し確認**。CIも単体テストも守れない領域に網をかける
 - **E2Eの自動化の土台**。Growthのv1積み残しP1がこれに当たる
+
+## Macローカルの実機確認用アカウント【2026-08-25 作成】
+
+Claudeが実機確認(ブラウザ操作)で使う。**消さずに使い回す。**
+
+- **アカウント**: `claude-check-20260825@example.com` / パスワードは `check-pass-20260825X`(ローカル専用。Mailpit宛のダミーアドレスなので本物のメールは届かない)
+  - **メールアドレス変更を1件申請済み**(変更先 `claude-check-new-20260825@example.com`・未確定)。確定画面の確認に使った
+- **検証用の会社**: 「クロード確認用の非常に長い会社名で…株式会社テスト×9」(オーナー)。**名前が長いのは省略表示の検証のため。改名しない**
+- **組織**: 工事部 > (第一工事課・営業部)。営業部はD&D検証で工事部の子へ移動した状態
+- 起動は id-platform の `bash tools/dev/devenv.sh up`。メールは Mailpit(`http://localhost:8025/api/v1/search?query=to:<addr>`)から取る
+- **ローカルで「サービスへ戻る」を出すには `ServiceCatalog.Services.growth.EntryUrl` が要る**(appsettings.Development.json に追加済み・2026-08-25)
