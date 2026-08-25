@@ -84,5 +84,14 @@ Claudeが実機確認(ブラウザ操作)で使う。**消さずに使い回す�
   - **メールアドレス変更を1件申請済み**(変更先 `claude-check-new-20260825@example.com`・未確定)。確定画面の確認に使った
 - **検証用の会社**: 「クロード確認用の非常に長い会社名で…株式会社テスト×9」(オーナー)。**名前が長いのは省略表示の検証のため。改名しない**
 - **組織**: 工事部 > (第一工事課・営業部)。営業部はD&D検証で工事部の子へ移動した状態
-- 起動は id-platform の `bash tools/dev/devenv.sh up`。メールは Mailpit(`http://localhost:8025/api/v1/search?query=to:<addr>`)から取る
+- **ローカルの起動コマンド(小林さん指定・2026-08-25)。聞かれたらこれをそのまま答える:**
+
+  ```
+  cd /Users/kobayashiyuuya/vsc/anyone/growth/id-platform
+  bash tools/dev/devenv.sh down
+  bash tools/dev/devenv.sh up
+  ```
+
+  (down→up の順。両リポジトリのアプリと依存サービスがまとめて上がる)
+- メールは Mailpit(`http://localhost:8025/api/v1/search?query=to:<addr>`)から取る
 - **ローカルで「サービスへ戻る」を出すには `ServiceCatalog.Services.growth.EntryUrl` が要る**(appsettings.Development.json に追加済み・2026-08-25)
