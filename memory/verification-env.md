@@ -95,3 +95,42 @@ Claudeが実機確認(ブラウザ操作)で使う。**消さずに使い回す�
   (down→up の順。両リポジトリのアプリと依存サービスがまとめて上がる)
 - メールは Mailpit(`http://localhost:8025/api/v1/search?query=to:<addr>`)から取る
 - **ローカルで「サービスへ戻る」を出すには `ServiceCatalog.Services.growth.EntryUrl` が要る**(appsettings.Development.json に追加済み・2026-08-25)
+
+## worktree の変更は localhost:5101 に出ない【2026-08-25 実測】
+
+**`devenv.sh` が起動する 5101 は「本体リポジトリ」を配信する。worktree で直したものは反映されない。**
+
+- 実測: 5101 の next-server の作業ディレクトリは `<本体>/apps/growth-web`。worktree ではなかった
+- **この取り違えで一度「スマホ対応が効いていない」と誤判定し、実装側を不当に差し戻した。**
+  実装側が「5101は別チェックアウトを見ている」と指摘して発覚した。**前提の指摘は真に受けて確かめること**
+- worktree を実機確認する方法は2つ。**Keycloak の redirect_uri が 5101 固定なので、別ポートで画面だけ上げても認証が通らない**
+  1. 5101 の dev サーバー自体を worktree のコードに差し替える(認証まで通したいときはこれ)
+  2. API だけ別ポート(5102など)で `dotnet run` し、worktree の `.env` の `GROWTH_API_BASE_URL` をそこへ向ける
+- `.env` は本体側からコピーが要る。`.next` が古いときは消す
+
+## Growth のテストは環境変数2つが必須【2026-08-25】
+
+```
+export GROWTH_TEST_DATABASE='Host=localhost;Port=55432;Database=growth_ci;Username=growth;Password=growth'
+export DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE=false
+```
+
+- **前者が無いと PostgreSQL の結合テストが62件黙ってスキップされ、緑に見える。**検証したことにならない
+- 後者が無いとホスト起動が5分でタイムアウトする
+- 55432 は検証用DBコンテナ `growth-verify-db`(CIと同じ認証)
+- **id-platform の Testcontainers 系はこの経路では動かない**(実行させない)
+
+## 画面の描画結果はテストで守れない【2026-08-25 に2回踏んだ】
+
+`apps/growth-web` の vitest は `environment: "node"` で、DOM を組み立てるテストが書けない。
+既存のテストは `renderToStaticMarkup` による静的描画の確認まで。**次の型の不具合は自動テストが全部緑でも起きる:**
+
+1. **CSSセレクタが実物のクラス名と噛み合っていない**(`.workspace-desktop-sidebar` と書いたが実物は `growth-sidebar` だった)
+2. **クライアント側の状態が絡む描画の固まり**(マウント判定フラグを再マウント時に戻し忘れ、取得結果を捨て続けて「読み込み中」のまま止まった)
+
+**画面に関わる変更は、必ず実ブラウザで描画結果を見る。**
+
+## CI は両リポジトリとも無効化中【2026-08-25 時点】
+
+コミットとプッシュを繰り返す期間の実行枠を空けるため、依頼により手動で停止(`disabled_manually`)。
+復旧するときは Growth が `gh workflow enable 335947838`、id-platform が `327068371`。
